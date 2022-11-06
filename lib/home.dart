@@ -3,15 +3,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:wheather_app/api.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  var data;
+
+  info() async {
+    var data = await getWeatherData(city: 'Kalamassery');
+    return data;
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
+      body:FutureBuilder(
+        future: info(),
+      
+        builder: (context, snapshot) {
+        return  Container(
         child: Column(
           children: [
             Container(
@@ -33,12 +45,34 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    "South Kalamassery",
+                    "${data?.city}",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     final result = await getWeatherData(city: 'Kalamassery');
+
+                  //     setState(() {
+                  //       _resultText = result.gust ?? "no city";
+
+                  //     });
+                  //   },
+                  //   child: Text("Continue"),
+                  // ),
+
+                  // TextFormField(
+                  //   initialValue: "South Kalamassery",
+                  //   decoration: InputDecoration(
+                  //     border: OutlineInputBorder(),
+                  //     hintText: "Enter the City",
+                  //   ),
+                  // ),
                   SizedBox(
                     height: 10,
                   ),
@@ -54,7 +88,7 @@ class HomePage extends StatelessWidget {
                     width: size.width * .35,
                   ),
                   Text(
-                    "Sunny",
+                    '${data?.condition}',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -289,7 +323,8 @@ class HomePage extends StatelessWidget {
             )
           ],
         ),
-      ),
+      );
+      },)
     );
   }
 }
